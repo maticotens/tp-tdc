@@ -1,7 +1,7 @@
-function calculateActuatorValue(controlValue, containersPool) {
+export function calculateActuatorValue(controlValue, containersPool) {
     if(controlValue > 0) return addContainers(containersPool, controlValue);
     if(controlValue < 0) return removeContainers(containersPool, controlValue);
-    
+
     return containersPool;
 }
 

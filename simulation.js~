@@ -88,5 +88,5 @@ function scan() {
 }
 
 function readDesiredValue() {
-    return parseFloat(document.getElementById('desired-value').value);
+    return parseInt(document.getElementById('desired-value').value);
 }
