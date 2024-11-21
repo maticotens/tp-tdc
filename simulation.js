@@ -42,13 +42,14 @@ function scan() {
 
     let controlValue = calculateControllerValue(errorValue);
 
+    let previousContainersCount = containersPool.length;
     containersPool = calculateActuatorValue(controlValue, containersPool);
 
     let requestsPerSecond = processWork(containersPool);
 
     let previousValue = currentValue;
 
-    currentValue = transformFrequencyToTime(requestsPerSecond);
+    currentValue = transformFrequencyToTime(requestsPerSecond, previousContainersCount);
 
     //TODO: LOG
 }
