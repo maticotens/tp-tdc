@@ -31,7 +31,9 @@ generateLogButton.addEventListener('click', () => {
  */
 
 const SCAN_INTERVAL = 1000;
+
 currentValue = 0;
+containersPool = [0];
 
 function scan() {
     let desiredValue = readDesiredValue();
@@ -40,7 +42,7 @@ function scan() {
 
     let controlValue = calculateControllerValue(errorValue);
 
-    let containersPool = calculateActuatorValue(controlValue);
+    containersPool = calculateActuatorValue(controlValue, containersPool);
 
     let requestsPerSecond = processWork(containersPool);
 

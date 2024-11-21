@@ -51,27 +51,6 @@ function scan() {
     //TODO: LOG
 }
 
-function calculateControllerValue(errorValue) {
-    //TODO
-    let proportionalValue = calculateProportionalValue(errorValue);
-    let integralValue = calculateIntegralValue(errorValue);
-    let derivativeValue = calculateDerivativeValue(errorValue);
-
-    return proportionalValue + integralValue + derivativeValue;
-}
-
-function calculateProportionalValue(errorValue) {
-    return undefined;
-}
-
-function calculateIntegralValue(errorValue) {
-    return undefined;
-}
-
-function calculateDerivativeValue(errorValue) {
-    return undefined;
-}
-
 function readDesiredValue() {
     return parseInt(document.getElementById('desired-value').value);
 }
