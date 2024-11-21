@@ -1,28 +1,20 @@
-// Obtén referencias a los elementos del DOM
 const logSection = document.getElementById('log-section');
-const generateLogButton = document.getElementById('generate-log');
 
-// Función para agregar un log al HTML
 function addLog(message, type = 'info') {
-    // Crear un nuevo elemento para el log
     const logEntry = document.createElement('div');
     logEntry.classList.add('log-entry');
-    logEntry.classList.add(`text-${type}`); // Colores según Bootstrap (e.g., text-info, text-danger)
+    logEntry.classList.add(`text-${type}`);
 
-    // Agregar el mensaje con la hora actual
     const timestamp = new Date().toLocaleTimeString();
     logEntry.textContent = `[${timestamp}] ${message}`;
 
-    // Añadir el log al contenedor
     logSection.appendChild(logEntry);
 
-    // Hacer scroll automático hacia abajo
     logSection.scrollTop = logSection.scrollHeight;
 }
 
-// Evento del botón para generar logs
+/*
 generateLogButton.addEventListener('click', () => {
-    // Generar un mensaje aleatorio
     const logTypes = ['info', 'warning', 'danger', 'success'];
     const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
     const messages = [
@@ -34,9 +26,52 @@ generateLogButton.addEventListener('click', () => {
     ];
     const randomMessage = messages[Math.floor(Math.random() * messages.length)];
 
-    // Agregar el log
     addLog(randomMessage, randomType);
 });
+ */
 
-// Ejemplo inicial
-addLog('Log viewer initialized', 'success');
+const SCAN_INTERVAL = 1000;
+currentValue = 0;
+
+function scan() {
+    let desiredValue = readDesiredValue();
+
+    let errorValue = desiredValue - currentValue;
+
+    let controlValue = calculateControllerValue(errorValue);
+
+    let containersPool = calculateActuatorValue(controlValue);
+
+    let requestsPerSecond = processWork(containersPool);
+
+    let previousValue = currentValue;
+
+    currentValue = transformFrequencyToTime(requestsPerSecond);
+
+    //TODO: LOG
+}
+
+function calculateControllerValue(errorValue) {
+    //TODO
+    let proportionalValue = calculateProportionalValue(errorValue);
+    let integralValue = calculateIntegralValue(errorValue);
+    let derivativeValue = calculateDerivativeValue(errorValue);
+
+    return proportionalValue + integralValue + derivativeValue;
+}
+
+function calculateProportionalValue(errorValue) {
+    return undefined;
+}
+
+function calculateIntegralValue(errorValue) {
+    return undefined;
+}
+
+function calculateDerivativeValue(errorValue) {
+    return undefined;
+}
+
+function readDesiredValue() {
+    return parseInt(document.getElementById('desired-value').value);
+}

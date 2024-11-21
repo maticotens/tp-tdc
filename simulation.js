@@ -1,6 +1,4 @@
-// Obtén referencias a los elementos del DOM
 const logSection = document.getElementById('log-section');
-const generateLogButton = document.getElementById('generate-log');
 
 function addLog(message, type = 'info') {
     const logEntry = document.createElement('div');
@@ -15,6 +13,7 @@ function addLog(message, type = 'info') {
     logSection.scrollTop = logSection.scrollHeight;
 }
 
+/*
 generateLogButton.addEventListener('click', () => {
     const logTypes = ['info', 'warning', 'danger', 'success'];
     const randomType = logTypes[Math.floor(Math.random() * logTypes.length)];
@@ -29,3 +28,29 @@ generateLogButton.addEventListener('click', () => {
 
     addLog(randomMessage, randomType);
 });
+ */
+
+const SCAN_INTERVAL = 1000;
+currentValue = 0;
+
+function scan() {
+    let desiredValue = readDesiredValue();
+
+    let errorValue = desiredValue - currentValue;
+
+    let controlValue = calculateControllerValue(errorValue);
+
+    let containersPool = calculateActuatorValue(controlValue);
+
+    let requestsPerSecond = processWork(containersPool);
+
+    let previousValue = currentValue;
+
+    currentValue = transformFrequencyToTime(requestsPerSecond);
+
+    //TODO: LOG
+}
+
+function readDesiredValue() {
+    return parseInt(document.getElementById('desired-value').value);
+}
