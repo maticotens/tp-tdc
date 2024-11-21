@@ -66,7 +66,7 @@ function addLog(desiredValue, previousResponseTime, errorValue, controlValue, co
 }
 
 currentResponseTime = 0;
-containersPool = [0];
+containersPool = [0, 1, 2];
 
 function scan() {
     let desiredValue = readDesiredValue();
@@ -84,7 +84,7 @@ function scan() {
 
     currentResponseTime = transformFrequencyToTime(requestsPerSecond, previousContainersCount);
 
-    addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPool, requestsPerSecond, currentResponseTime)
+    addLog(desiredValue, previousResponseTime/1000, errorValue, controlValue, containersPool, requestsPerSecond, currentResponseTime/1000)
 }
 
 function readDesiredValue() {

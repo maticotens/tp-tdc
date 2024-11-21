@@ -15,10 +15,10 @@ const DERIVATE_INTERVAL = 2;
 
 function calculateControllerValue(errorValue) {
     let proportionalValue = calculateProportionalValue(errorValue);
-    let integralValue = calculateIntegralValue(errorValue);
+    //let integralValue = calculateIntegralValue(errorValue);
     let derivativeValue = calculateDerivativeValue(errorValue);
 
-    return proportionalValue + integralValue + derivativeValue;
+    return proportionalValue + derivativeValue;
 }
 
 function calculateProportionalValue(errorValue) {
@@ -39,6 +39,9 @@ function calculateIntegralValue(errorValue) {
 }
 
 function calculateDerivativeValue(errorValue) {
+    last10ErrorValues.pop();
+    last10ErrorValues.unshift(errorValue);
+
     let initialValue = last10ErrorValues[DERIVATE_INTERVAL];
     let derivativeValue = (errorValue - initialValue)/(DERIVATE_INTERVAL+1);
     return errorResultValue(derivativeValue);

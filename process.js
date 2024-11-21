@@ -35,7 +35,10 @@ function processRequests(requestsWithMiliseconds, containers) {
         }
     }
 
-    return requestsWithMiliseconds.filter(request => request.processed === true).length;
+    let processedRequests = requestsWithMiliseconds.filter(request => request.processed === true).length;
+    let unprocessedRequests = requestsWithMiliseconds.filter(request => request.processed === false).length;
+
+    return processedRequests-unprocessedRequests;
 }
 
 function randomProcessTimeBetween(min, max) {

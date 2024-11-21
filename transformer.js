@@ -1,5 +1,4 @@
-const MAX_CONCURRENT_REQUESTS = 4;
-
 function transformFrequencyToTime(requestsPerSecond, containers) {
-    return 1 / (containers*MAX_CONCURRENT_REQUESTS - requestsPerSecond);
+    if(requestsPerSecond <= 0) return 3000;
+    return 1000 / requestsPerSecond;
 }

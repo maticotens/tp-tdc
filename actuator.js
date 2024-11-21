@@ -17,7 +17,7 @@ function addContainers(containersPool, controlValue) {
 }
 
 function removeContainers(containersPool, controlValue) {
-    for(let i = 0; i < controlValue; i++) {
+    for(let i = 0; i < Math.abs(controlValue); i++) {
         containersPool.pop();
     }
     return containersPool;

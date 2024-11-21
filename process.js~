@@ -1,7 +1,7 @@
 const requestsPerSecondElement = document.getElementById('requests-per-second');
 const MAX_PROCESS_TIME = 1000;
 
-export function processWork(containersPool) {
+function processWork(containersPool) {
     let requestsPerSecond = parseInt(requestsPerSecondElement.value);
     let containers = containersPool.length;
 
