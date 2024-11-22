@@ -21,12 +21,10 @@ stopSimulationButton.addEventListener('click', () => {
     }
 });
 
-botsButton.addEventListener('click', async () => {
-    let previousValue = document.getElementById("requests-per-second").value;
+botsButton.addEventListener('click', () => {
     document.getElementById("requests-per-second").value = 3000;
-    await sleep(2200);
-    document.getElementById("requests-per-second").value = previousValue;
-});
+    await sleep(2200)
+}
 
 function addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPool, requestsPerSecond, currentResponseTime) {
     const logEntry = document.createElement('div');
