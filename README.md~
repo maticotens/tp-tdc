@@ -22,5 +22,6 @@ Se utilizaron las tecnologías web JavaScript y HTML para facilitar su portabili
 
 1. Ingresar el tiempo de respuesta deseado para los requests.
 2. Ingresar la cantidad de requests por segundo que recibirán los containers.
-3. Presionar el botón "Simular". 
-4. Se podrá presionar el botón "Bots" para aumentar a 3000 los requests por segundo recibidos por los containers, durante 2 segundos.
+3. Presionar el botón "Simular".
+
+Se podrá presionar el botón "Bots" para aumentar a 3000 los requests por segundo recibidos por los containers, durante 2 segundos.
