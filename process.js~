@@ -1,41 +1,58 @@
 const requestsPerSecondElement = document.getElementById('requests-per-second');
 const MAX_PROCESS_TIME = 1000;
 
+let requestsAwaiting = [];
+
 function processWork(containersPool) {
     let requestsPerSecond = parseInt(requestsPerSecondElement.value);
-    let containers = containersPool.length;
 
-    let requestsWithMiliseconds = []
     for(let i = 0; i < requestsPerSecond; i++) {
-        let processTime = Math.floor(randomProcessTimeBetween(100, 900)) + 1;
-        requestsWithMiliseconds.push({
-            request: i,
+        let processTime = Math.floor(randomProcessTimeBetween(600, 1200)) + 1;
+        requestsAwaiting.unshift({
             time: processTime,
-            processed: false
+            waitingTime: 0
         })
     }
 
-    return processRequests(requestsWithMiliseconds, containers);
+    return processRequests(containersPool);
 }
 
-function processRequests(requestsWithMiliseconds, containers) {
+function processRequests(containers) {
     let containersWithMiliseconds = [];
     for (let i = 0; i < containers; i++) {
         containersWithMiliseconds.push({
             container: i,
-            time: MAX_PROCESS_TIME
+            time: MAX_PROCESS_TIME,
+            isWorking: false
         })
     }
 
-    for(let i = 0; i < requestsWithMiliseconds.length; i++) {
-        let container = containersWithMiliseconds.find(container => container.time >= requestsWithMiliseconds[i].time);
-        if(container !== undefined) {
-            container.time -= requestsWithMiliseconds[i].time;
-            requestsWithMiliseconds[i].processed = true;
+    let processedRequests = [];
+
+    for (let i = 0; i < containersWithMiliseconds.length; i++) {
+        while(containersWithMiliseconds[i].time > 0 && requestsAwaiting.length > 0) {
+            let request = requestsAwaiting.pop();
+
+            containersWithMiliseconds[i].time -= request.time;
+            containersWithMiliseconds[i].isWorking = true;
+
+            if(containersWithMiliseconds[i].time <= 0) {
+                containersWithMiliseconds[i].time = 0;
+            }
+
+            processedRequests.unshift({
+                ...request,
+                container: containersWithMiliseconds[i].isWorking
+            });
         }
     }
 
-    return requestsWithMiliseconds.filter(request => request.processed === true).length;
+    requestsAwaiting = requestsAwaiting.map(request => ({
+        ...request,
+        waitingTime: request.waitingTime + 1000
+    }))
+
+    return processedRequests;
 }
 
 function randomProcessTimeBetween(min, max) {

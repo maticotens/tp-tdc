@@ -51,40 +51,66 @@ function addLog(desiredValue, previousResponseTime, errorValue, controlValue, co
 
     const timestamp = new Date().toLocaleTimeString();
 
-    logEntry.innerHTML = `<span class="log-time">${timestamp}</span>` +
-        `<span class="log-desired-value">Desired Value: ${desiredValue}</span>` +
-        `<span class="log-previous-response-time">Previous Response Time: ${previousResponseTime}</span>` +
-        `<span class="log-error-value">Error Value: ${errorValue}</span>` +
-        `<span class="log-control-value">Control Value: ${controlValue}</span>` +
-        `<span class="log-containers-pool">Containers Pool: ${containersPool}</span>` +
-        `<span class="log-requests-per-second">Requests per Second: ${requestsPerSecond}</span>` +
-        `<span class="log-current-response-time">Current Response Time: ${currentResponseTime}</span>`;
+    logEntry.innerHTML = `<span class="log-time">[${timestamp}] </span>` +
+        `<span class="text-danger">Tiempo de respuesta: ${currentResponseTime.toFixed(2)}</span><span class="text-black">. </span>` +
+        `<span class="text-success">Valor esperado: ${desiredValue}</span><span class="text-black">. </span>` +
+        `<span class="text-primary">Containers a agregar: ${controlValue}</span>` +
+        `<span class="text-black">. Pool containers: ${containersPool}</span>` +
+        `<span class="text-black">. Requests: ${requestsPerSecond}. </span>` +
+        `<span class="text-black">Pendientes: ${requestsAwaiting.length}. </span>`;
 
     logSection.appendChild(logEntry);
 
     logSection.scrollTop = logSection.scrollHeight;
 }
 
+scanNum = 0;
 currentResponseTime = 0;
-containersPool = [0, 1, 2];
+containersPoolSize = 1;
+requestsPerSecond = []
+totalContainers = []
 
 function scan() {
     let desiredValue = readDesiredValue();
 
-    let previousResponseTime = currentResponseTime;
+    if(scanNum == 0){
+        currentResponseTime = desiredValue;
+        requestsPerSecond = [
+            {
+                time: 100,
+                waitingTime: 0,
+                container: false
+            }
+        ];
+        totalContainers = [
+            {
+                container: 1,
+                time: 1000,
+                isWorking: false
+            }
+        ];
+    }
 
     let errorValue = desiredValue - currentResponseTime;
 
     let controlValue = calculateControllerValue(errorValue);
 
-    let previousContainersCount = containersPool.length;
-    containersPool = calculateActuatorValue(controlValue, containersPool);
+    let previousContainersCount = containersPoolSize;
+    containersPoolSize = calculateActuatorValue(controlValue, containersPoolSize);
 
-    let requestsPerSecond = processWork(containersPool);
+    processResult = processWork(containersPoolSize);
 
-    currentResponseTime = transformFrequencyToTime(requestsPerSecond, previousContainersCount);
+    requestsPerSecond = processResult.processedRequests;
 
-    addLog(desiredValue, previousResponseTime/1000, errorValue, controlValue, containersPool, requestsPerSecond, currentResponseTime/1000)
+    totalContainers = processResult.containersWithMiliseconds;
+
+    let previousResponseTime = currentResponseTime;
+
+    currentResponseTime = transformFrequencyToTime(requestsPerSecond, requestsAwaiting);
+
+    addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPoolSize, requestsPerSecond.length, currentResponseTime)
+
+    scanNum++;
 }
 
 function readDesiredValue() {
