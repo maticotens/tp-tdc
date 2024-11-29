@@ -2,6 +2,12 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+setInterval(() => {
+    for (const canvasId in charts) {
+        charts[canvasId].update();
+    }
+}, 999);
+
 const logSection = document.getElementById('log-section');
 
 let intervalId;
@@ -20,6 +26,16 @@ stopSimulationButton.addEventListener('click', () => {
         intervalId = null;
     }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    // Initialize all charts
+    initializeChart('errorChart', 'Error', 'red');
+    initializeChart('controlChart', 'Salida Controlador', 'blue');
+    initializeChart('containersChart', 'Total de Containers', 'purple');
+    initializeChart('requestsChart', 'Perturbaciones', 'orange');
+    initializeChart('responseTimeChart', 'Salida', 'teal');
+    initializeChart('transformationChart', 'Salida transformador (f)', 'green');
+});
+
 
 botsButton.addEventListener('click', async () => {
     let previousValue = document.getElementById("requests-per-second").value;
@@ -47,16 +63,16 @@ function addLog(desiredValue, previousResponseTime, errorValue, controlValue, co
     logSection.scrollTop = logSection.scrollHeight;
 }
 
-scanNum = 0;
-currentResponseTime = 0;
-containersPoolSize = 1;
-requestsPerSecond = []
-totalContainers = []
+let scanNum = 0;
+let currentResponseTime = 0;
+let containersPoolSize = 1;
+let requestsPerSecond = []
+let totalContainers = []
 
 function scan() {
     let desiredValue = readDesiredValue();
 
-    if(scanNum == 0){
+    if(scanNum === 0){
         currentResponseTime = desiredValue;
         requestsPerSecond = [
             {
@@ -73,25 +89,25 @@ function scan() {
             }
         ];
     }
-
     let errorValue = desiredValue - currentResponseTime;
-
     let controlValue = calculateControllerValue(errorValue);
-
     let previousContainersCount = containersPoolSize;
     containersPoolSize = calculateActuatorValue(controlValue, containersPoolSize);
-
-    processResult = processWork(containersPoolSize);
-
+    let processResult = processWork(containersPoolSize);
     requestsPerSecond = processResult.processedRequests;
-
     totalContainers = processResult.containersWithMiliseconds;
-
     let previousResponseTime = currentResponseTime;
-
     currentResponseTime = transformFrequencyToTime(requestsPerSecond, requestsAwaiting);
 
-    addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPoolSize, requestsPerSecond.length, currentResponseTime)
+    addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPoolSize, requestsPerSecond.length, currentResponseTime);
+
+    updateChart('errorChart', errorValue);
+    updateChart('controlChart', controlValue);
+    updateChart('requestsChart', parseInt(requestsPerSecondElement.value));
+    updateChart('containersChart', containersPoolSize);
+    updateChart('responseTimeChart', requestsPerSecond.reduce((a,b) => a + b.time, 0)/requestsPerSecond.length);
+    updateChart('transformationChart', currentResponseTime);
+
 
     scanNum++;
 }
