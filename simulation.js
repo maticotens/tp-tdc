@@ -22,8 +22,7 @@ initSimulationButton.addEventListener('click', () => {
 
 stopSimulationButton.addEventListener('click', () => {
     if (intervalId) {
-        clearInterval(intervalId);
-        intervalId = null;
+        stopSimulation();
     }
 });
 document.addEventListener('DOMContentLoaded', () => {
@@ -114,4 +113,21 @@ function scan() {
 
 function readDesiredValue() {
     return parseFloat(document.getElementById('desired-value').value);
+}
+
+function stopSimulation(){
+    clearInterval(intervalId);
+    intervalId = null;
+    scanNum = 0;
+    currentResponseTime = 0;
+    containersPoolSize = 1;
+    requestsPerSecond = []
+    totalContainers = []
+    logSection.innerHTML = '';
+    updateChart('errorChart', 0);
+    updateChart('controlChart', 0);
+    updateChart('requestsChart', 0);
+    updateChart('containersChart', 0);
+    updateChart('responseTimeChart', 0);
+    updateChart('transformationChart', 0);
 }
