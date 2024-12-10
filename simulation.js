@@ -100,7 +100,7 @@ function scan() {
 
     addLog(desiredValue, previousResponseTime, errorValue, controlValue, containersPoolSize, requestsPerSecond.length, currentResponseTime);
 
-    updateChart('errorChart', errorValue);
+    updateChart('errorChart', errorValueCalc(errorValue));
     updateChart('controlChart', controlValue);
     updateChart('requestsChart', parseInt(requestsPerSecondElement.value));
     updateChart('containersChart', containersPoolSize);
@@ -118,16 +118,8 @@ function readDesiredValue() {
 function stopSimulation(){
     clearInterval(intervalId);
     intervalId = null;
-    scanNum = 0;
-    currentResponseTime = 0;
-    containersPoolSize = 1;
-    requestsPerSecond = []
-    totalContainers = []
-    logSection.innerHTML = '';
-    updateChart('errorChart', 0);
-    updateChart('controlChart', 0);
-    updateChart('requestsChart', 0);
-    updateChart('containersChart', 0);
-    updateChart('responseTimeChart', 0);
-    updateChart('transformationChart', 0);
+}
+
+function errorValueCalc(errorValue) {
+    return readDesiredValue() - currentResponseTime;
 }
